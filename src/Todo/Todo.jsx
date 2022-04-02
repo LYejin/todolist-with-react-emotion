@@ -1,45 +1,88 @@
 /** @jsxImportSource @emotion/react */
 import React from "react";
 import { css } from "@emotion/react";
+import { useState } from "react";
 
-const container = css`
-  margin: 0;
-  padding: 0;
-`;
+/* 스타일 시작 */
 
 const liBox = css`
-  list-style: none;
+  display: flex;
+  justify-content: center;
+  color: #74696d;
   background-color: #f9f9f9;
-  padding: 12px 8px, 12px, 40px;
-  text-align: left;
+  list-style: none;
+  font-size: 30px;
   cursor: pointer;
-  position: relative;
-  font-size: 18px;
+  &:hover {
+    background-color: #ddd;
+  }
+`;
+
+const liBoxChecked = css`
+  background-color: #888;
+  color: #fff;
+  text-decoration: line-through;
 `;
 
 const text = css`
-  position: relative;
-  top: 10px;
-  left: 40px;
-  font-size: 30px;
+  right: 200px;
 `;
 
 const close = css`
-  position: relative;
-  top: 5px;
-  left: 270px;
-  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  display: flex;
+  width: 50px;
+  height: 50px;
+  color: #74696d;
+  &:hover {
+    background-color: red;
+  }
 `;
 
-const Todo = (props) => {
-  const { todoList } = props;
+const listBoxStyle = (todoListCheck) => {
+  return css`
+    background-color: ${todoListCheck ? "#888" : "#f9f9f9"};
+    color: ${todoListCheck ? "#fff" : "#74696d"};
+    text-decoration: ${todoListCheck ? "line-through" : ""};
+    color: #74696d;
+    background-color: #f9f9f9;
+    list-style: none;
+    font-size: 30px;
+    cursor: pointer;
+    &:hover {
+      background-color: #ddd;
+    }
+  `;
+};
+
+/* 스타일 종료 */
+
+const Todo = ({ todoList, setTodoList, id }) => {
+  const [todoListCheck, setTodoListCheck] = useState(false);
+
+  const onTodoListClick = (e) => {
+    e.preventDefault();
+    setTodoListCheck(!todoListCheck);
+  };
+
+  const onDeleteButton = (id) => {
+    setTodoList(todoList.filter((todo) => todo.id !== id));
+  };
 
   return (
-    <ul css={container}>
-      {todoList.map((todo, index) => (
-        <li css={liBox} key={index}>
-          {todo}
-          <span css={close}>x</span>
+    <ul>
+      {todoList.map((todo) => (
+        <li
+          css={listBoxStyle(todoListCheck)}
+          key={todo.id}
+          onClick={onTodoListClick}
+        >
+          <span css={text}>{todo.input}</span>
+          <span css={close} onClick={() => onDeleteButton(todo.id)}>
+            x
+          </span>
         </li>
       ))}
     </ul>

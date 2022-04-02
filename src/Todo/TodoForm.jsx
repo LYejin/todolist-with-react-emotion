@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
-import { css, jsx } from "@emotion/react";
+import React, { useRef, useState } from "react";
+import { css } from "@emotion/react";
 
-{
-  /* 스타일 시작 */
-}
+/* 스타일 시작 */
+
 const headerBox = css`
   background-color: #f44336;
   padding: 20px;
@@ -14,14 +13,15 @@ const title = css`
   color: white;
   margin: 0;
   padding: 20px;
+  text-align: center;
 `;
 
-const formBox = css`
+const form = css`
   display: flex;
   justify-content: center;
 `;
 
-const input = css`
+const inputStyle = css`
   width: 500px;
   height: 45px;
   border: none;
@@ -42,24 +42,51 @@ const addButton = css`
   }
 `;
 
-{
-  /* 스타일 끝 */
-}
+/* 스타일 종료 */
 
-const TodoForm = (props) => {
-  const { setTodoList } = props;
+const TodoForm = ({ todoList, setTodoList }) => {
+  const inputFocus = useRef(null);
+  const [count, setCount] = useState(0);
+  const [input, setInput] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setTodoList((state) => [e.target.children.title.value, ...state]);
+  const inputTodo = {
+    id: "",
+    input,
   };
+
+  const onCreateTodoList = (e) => {
+    e.preventDefault();
+    inputTodo.id = count;
+    inputTodo.input = e.target.children.title.value;
+    setTodoList([...todoList, inputTodo]);
+    setCount(count + 1);
+    resetInput();
+  };
+
+  const resetInput = () => {
+    const Input = document.querySelector(".input");
+    Input.value = "";
+    setInput("");
+  };
+  const handleFocus = (e) => {
+    inputFocus.current.focus();
+  };
+
+  console.log(todoList);
 
   return (
     <div css={headerBox}>
       <h1 css={title}>My To Do List</h1>
-      <form css={formBox} onSubmit={handleSubmit}>
-        <input css={input} name="title" type="text" placeholder="Title..." />
-        <button css={addButton} type="submit">
+      <form css={form} onSubmit={onCreateTodoList}>
+        <input
+          className="input"
+          css={inputStyle}
+          ref={inputFocus}
+          name="title"
+          type="text"
+          placeholder="Title..."
+        />
+        <button css={addButton} type="submit" onClick={handleFocus}>
           Add
         </button>
       </form>
