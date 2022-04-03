@@ -1,10 +1,13 @@
 import TodoList from "./Todo/TodoList";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <div>
-      <TodoList />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<TodoList />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

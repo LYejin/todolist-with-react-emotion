@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { css } from "@emotion/react";
+import { useState } from "react";
 
 /* 스타일 시작 */
 
@@ -47,46 +48,31 @@ const addButton = css`
 const TodoForm = ({ todoList, setTodoList }) => {
   const inputFocus = useRef(null);
   const [count, setCount] = useState(0);
-  const [input, setInput] = useState("");
 
-  const inputTodo = {
-    id: "",
-    input,
-  };
-
+  // todoList 생성 함수
   const onCreateTodoList = (e) => {
     e.preventDefault();
-    inputTodo.id = count;
-    inputTodo.input = e.target.children.title.value;
-    setTodoList([...todoList, inputTodo]);
+    setTodoList([
+      ...todoList,
+      { id: count, input: e.target.children.title.value, check: false },
+    ]);
     setCount(count + 1);
-    resetInput();
-  };
-
-  const resetInput = () => {
-    const Input = document.querySelector(".input");
-    Input.value = "";
-    setInput("");
-  };
-  const handleFocus = (e) => {
+    inputFocus.current.value = "";
     inputFocus.current.focus();
   };
-
-  console.log(todoList);
 
   return (
     <div css={headerBox}>
       <h1 css={title}>My To Do List</h1>
       <form css={form} onSubmit={onCreateTodoList}>
         <input
-          className="input"
           css={inputStyle}
           ref={inputFocus}
           name="title"
           type="text"
           placeholder="Title..."
         />
-        <button css={addButton} type="submit" onClick={handleFocus}>
+        <button css={addButton} type="submit">
           Add
         </button>
       </form>
